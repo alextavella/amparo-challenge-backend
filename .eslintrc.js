@@ -21,6 +21,7 @@ module.exports = {
     '@typescript-eslint/consistent-type-definitions': 'off',
     '@typescript-eslint/consistent-type-assertions': 'off',
     '@typescript-eslint/comma-spacing': 'off',
+    '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/method-signature-style': 'off',
     '@typescript-eslint/no-redeclare': 'off',

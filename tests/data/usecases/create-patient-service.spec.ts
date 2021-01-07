@@ -1,19 +1,19 @@
-import { CreatePatientRepository } from '@/data/db'
 import { CreatePatientsService } from '@/data/usecases'
+import { CreatePatientRepository } from '@/domain/db'
 import { CreatePatients } from '@/domain/usecases'
-import { FakePatientMemoryRepository } from '@/tests/infra/memorydb'
+import { FakePatientMemoryRepository } from '@/tests/infra'
 
-let createPatients: CreatePatients
-let patientMemoryRepository: CreatePatientRepository
+let service: CreatePatients
+let repository: CreatePatientRepository
 
 describe('CreatePatientService', () => {
   beforeEach(() => {
-    patientMemoryRepository = new FakePatientMemoryRepository()
-    createPatients = new CreatePatientsService(patientMemoryRepository)
+    repository = new FakePatientMemoryRepository()
+    service = new CreatePatientsService(repository)
   })
 
   it('should be able create a patient', async () => {
-    const patient = await createPatients.create({
+    const patient = await service.create({
       name: 'Alex',
       cpf: '12345678900',
     })

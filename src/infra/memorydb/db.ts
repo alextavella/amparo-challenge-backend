@@ -2,6 +2,7 @@ import { v1 as uuid } from 'uuid'
 
 export interface Collection<T = Object> {
   add(obj: T): T
+  filter(predicate: any): T[]
 }
 
 export class MemoryDb {
@@ -24,5 +25,9 @@ class MemoryCollection<T = Object> implements Collection {
     const added = Object.assign(obj, { id: uuid() })
     this.data.push(added)
     return added
+  }
+
+  public filter(predicate: any): T[] {
+    return this.data.filter(predicate)
   }
 }
