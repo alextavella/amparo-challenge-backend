@@ -1,15 +1,18 @@
 import {
   CreateActivityRepository,
+  LoadActivitiesRepository,
   LoadActivityByIdRepository,
   SaveActivityRepository,
 } from '@/data/db'
 import { ActivityEntity, convertToActivityEntityStatus } from '@/data/entities'
 import { CreateActivities } from '@/domain/usecases'
 import { Collection, MemoryDb } from './db'
+import { isAfter } from 'date-fns'
 
 export class ActivityMemoryRepository
   implements
     CreateActivityRepository,
+    LoadActivitiesRepository,
     LoadActivityByIdRepository,
     SaveActivityRepository {
   protected readonly collection: Collection
@@ -33,6 +36,14 @@ export class ActivityMemoryRepository
     const entity = this.collection.find((a: ActivityEntity) => a.id === id)
 
     return Promise.resolve(entity as ActivityEntity)
+  }
+
+  async loadByDate(date: Date = new Date()): Promise<ActivityEntity[]> {
+    const entities = this.collection.filter((a: ActivityEntity) =>
+      isAfter(a.data_vencimento, date),
+    )
+
+    return Promise.resolve(entities as ActivityEntity[])
   }
 
   async save(entity: ActivityEntity): Promise<ActivityEntity> {

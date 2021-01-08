@@ -1,9 +1,8 @@
-import { PatientEntity } from '@/data/entities'
 import { ActivityStatus } from '@/domain/models'
 
 export type ActivityEntity = {
   id: string
-  patient: PatientEntity
+  patient_id: string
   data_vencimento: Date
   status: ActivityEntityStatus
   name: string
