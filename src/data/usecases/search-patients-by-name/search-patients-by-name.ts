@@ -1,14 +1,12 @@
 import { PatientEntity } from '@/data/entities'
-import { SearchPatientsByNameRepository } from '@/domain/db'
+import { SearchPatientsByNameRepository } from '@/data/db'
 import { SearchPatientsByName } from '@/domain/usecases'
 
 export class SearchPatientsByNameService implements SearchPatientsByName {
-  constructor(
-    private readonly searchPatientsByNameRepository: SearchPatientsByNameRepository,
-  ) {}
+  constructor(private readonly repository: SearchPatientsByNameRepository) {}
 
   async search(name: string): Promise<SearchPatientsByNameService.Response> {
-    return await this.searchPatientsByNameRepository.searchByName(name)
+    return await this.repository.searchByName(name)
   }
 }
 

@@ -1,5 +1,5 @@
 import { CreatePatientsService } from '@/data/usecases'
-import { CreatePatientRepository } from '@/domain/db'
+import { CreatePatientRepository } from '@/data/db'
 import { CreatePatients } from '@/domain/usecases'
 import { FakePatientMemoryRepository } from '@/tests/infra'
 

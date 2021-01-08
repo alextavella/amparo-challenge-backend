@@ -1,12 +1,12 @@
-import { PatientEntity } from '@/data/entities/patient'
+import {
+  CreatePatientRepository,
+  SearchPatientsByNameRepository,
+} from '@/data/db'
+import { PatientEntity } from '@/data/entities'
 import {
   CreatePatientsService,
   SearchPatientsByNameService,
 } from '@/data/usecases'
-import {
-  CreatePatientRepository,
-  SearchPatientsByNameRepository,
-} from '@/domain/db'
 import { MemoryDb } from './db'
 
 export class PatientMemoryRepository
@@ -15,9 +15,7 @@ export class PatientMemoryRepository
     'patients',
   )
 
-  async create(
-    model: CreatePatientsService.Model,
-  ): Promise<CreatePatientsService.Response> {
+  async create(model: PatientEntity): Promise<CreatePatientsService.Response> {
     const entity = await this.collection.add(model)
     return entity as CreatePatientsService.Response
   }

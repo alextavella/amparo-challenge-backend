@@ -2,7 +2,8 @@ import { v1 as uuid } from 'uuid'
 
 export interface Collection<T = Object> {
   add(obj: T): T
-  filter(obj: T): T
+  filter(predicate: any): T
+  find(predicate: any): T | undefined
 }
 
 export class FakeMemoryDb {
@@ -29,5 +30,9 @@ class FakeMemoryCollection<T = Object> implements Collection {
 
   public filter(predicate: any): T[] {
     return this.data.filter(predicate)
+  }
+
+  public find(predicate: any): T | undefined {
+    return this.data.find(predicate)
   }
 }

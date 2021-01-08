@@ -1,5 +1,5 @@
 import { SearchPatientsByNameService } from '@/data/usecases'
-import { SearchPatientsByNameRepository } from '@/domain/db'
+import { SearchPatientsByNameRepository } from '@/data/db'
 import { SearchPatientsByName } from '@/domain/usecases'
 import { FakePatientMemoryRepository } from '@/tests/infra'
 
