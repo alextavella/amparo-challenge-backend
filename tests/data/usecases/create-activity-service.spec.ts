@@ -1,6 +1,6 @@
-import { PatientNotFound } from './../../../src/domain/errors/patient-not-found-error'
 import { CreateActivityRepository, LoadPatientByIdRepository } from '@/data/db'
 import { CreateActivityService } from '@/data/usecases'
+import { PatientNotFound } from '@/domain/errors'
 import { ActivityStatus } from '@/domain/models'
 import { CreateActivities } from '@/domain/usecases'
 import {
@@ -10,20 +10,20 @@ import {
 
 let service: CreateActivities
 let repository: CreateActivityRepository
-let patientRepo: FakePatientMemoryRepository
+let patientRepository: FakePatientMemoryRepository
 
 describe('CreateActivityService', () => {
   beforeEach(() => {
     repository = new FakeActivityMemoryRepository()
-    patientRepo = new FakePatientMemoryRepository()
+    patientRepository = new FakePatientMemoryRepository()
     service = new CreateActivityService(
       repository,
-      patientRepo as LoadPatientByIdRepository,
+      patientRepository as LoadPatientByIdRepository,
     )
   })
 
   it('should be able create an activity', async () => {
-    const patient = await patientRepo.create({
+    const patient = await patientRepository.create({
       name: 'Alex',
       cpf: 'cpf',
     })
@@ -37,7 +37,7 @@ describe('CreateActivityService', () => {
       status: ActivityStatus.aberto,
     })
 
-    expect(activity).toStrictEqual(activity)
+    expect(activity).toHaveProperty('id')
   })
 
   it('should not be able create an activity when there is not patient', async () => {

@@ -1,31 +1,37 @@
 import {
   CreatePatientRepository,
+  LoadPatientByIdRepository,
   SearchPatientsByNameRepository,
 } from '@/data/db'
 import { PatientEntity } from '@/data/entities'
-import {
-  CreatePatientsService,
-  SearchPatientsByNameService,
-} from '@/data/usecases'
-import { MemoryDb } from './db'
+import { CreatePatients } from '@/domain/usecases'
+import { Collection, MemoryDb } from './db'
 
 export class PatientMemoryRepository
-  implements CreatePatientRepository, SearchPatientsByNameRepository {
-  private readonly collection = new MemoryDb().collection<PatientEntity>(
-    'patients',
-  )
+  implements
+    CreatePatientRepository,
+    SearchPatientsByNameRepository,
+    LoadPatientByIdRepository {
+  protected readonly collection: Collection
 
-  async create(model: PatientEntity): Promise<CreatePatientsService.Response> {
-    const entity = await this.collection.add(model)
-    return entity as CreatePatientsService.Response
+  constructor(collectionName = 'patients') {
+    this.collection = new MemoryDb<PatientEntity>().collection(collectionName)
   }
 
-  async searchByName(
-    name: string,
-  ): Promise<SearchPatientsByNameService.Response> {
+  async create(model: CreatePatients.Model): Promise<PatientEntity> {
+    const entity = await this.collection.add(model)
+    return Promise.resolve(entity as PatientEntity)
+  }
+
+  async searchByName(name: string): Promise<PatientEntity[]> {
     const entities = await this.collection.filter((p: PatientEntity) =>
       p.name.toLowerCase().includes(name.toLowerCase()),
     )
-    return entities as SearchPatientsByNameService.Response
+    return Promise.resolve(entities as PatientEntity[])
+  }
+
+  async load(id: string): Promise<PatientEntity | undefined> {
+    const entity = await this.collection.find((p: PatientEntity) => p.id === id)
+    return Promise.resolve(entity as PatientEntity)
   }
 }

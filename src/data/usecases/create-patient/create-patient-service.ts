@@ -8,11 +8,13 @@ export class CreatePatientsService implements CreatePatients {
   async create(
     model: CreatePatientsService.Model,
   ): Promise<CreatePatientsService.Response> {
-    return await this.repository.create(model)
+    const entity = await this.repository.create(model)
+
+    return entity as CreatePatientsService.Response
   }
 }
 
 export namespace CreatePatientsService {
   export type Model = CreatePatients.Model
-  export type Response = PatientEntity
+  export type Response = CreatePatients.Response
 }
