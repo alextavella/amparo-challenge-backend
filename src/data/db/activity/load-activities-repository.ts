@@ -1,5 +1,5 @@
-import { ActivityEntity } from '@/data/entities'
+import { Activity } from '@/domain/models'
 
 export interface LoadActivitiesRepository {
-  loadByDate(data: Date): Promise<ActivityEntity[]>
+  loadByDate(data: Date): Promise<Activity[]>
 }

@@ -1,5 +1,5 @@
-import { ActivityEntity } from '@/data/entities'
+import { Activity } from '@/domain/models'
 
 export interface SaveActivityRepository {
-  save(entity: ActivityEntity): Promise<ActivityEntity>
+  save(model: Activity): Promise<Activity>
 }

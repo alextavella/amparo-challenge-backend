@@ -1,17 +1,13 @@
 import { LoadActivityByIdRepository, SaveActivityRepository } from '@/data/db'
-import {
-  convertToActivityEntityStatus,
-  convertToActivityStatus,
-} from '@/data/entities'
 import { ActivityNotFound } from '@/domain/errors'
 import { ChangeActivityStatus } from '@/domain/usecases'
 
-export interface Repo
+export interface Repository
   extends LoadActivityByIdRepository,
     SaveActivityRepository {}
 
 export class ChangeActivityStatusService implements ChangeActivityStatus {
-  constructor(private readonly repository: Repo) {}
+  constructor(private readonly repository: Repository) {}
 
   async change(
     model: ChangeActivityStatusService.Model,
@@ -22,20 +18,11 @@ export class ChangeActivityStatusService implements ChangeActivityStatus {
       throw new ActivityNotFound()
     }
 
-    Object.assign(activity, {
-      status: convertToActivityEntityStatus(model.status),
-    })
+    const { status } = model
 
-    const entity = await this.repository.save(activity)
+    Object.assign(activity, { status })
 
-    const { id, data_vencimento, name, status } = entity
-
-    return {
-      id,
-      data_vencimento: data_vencimento.toISOString(),
-      name,
-      status: convertToActivityStatus(status),
-    }
+    return this.repository.save(activity)
   }
 }
 

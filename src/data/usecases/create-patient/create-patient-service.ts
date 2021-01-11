@@ -1,4 +1,3 @@
-import { PatientEntity } from '@/data/entities'
 import { CreatePatientRepository } from '@/data/db'
 import { CreatePatients } from '@/domain/usecases'
 
@@ -8,9 +7,7 @@ export class CreatePatientsService implements CreatePatients {
   async create(
     model: CreatePatientsService.Model,
   ): Promise<CreatePatientsService.Response> {
-    const entity = await this.repository.create(model)
-
-    return entity as CreatePatientsService.Response
+    return await this.repository.create(model)
   }
 }
 

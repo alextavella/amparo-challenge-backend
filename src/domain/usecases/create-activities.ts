@@ -7,10 +7,9 @@ export interface CreateActivities {
 export namespace CreateActivities {
   export type Model = {
     patient_id: string
-    data_vencimento: string
+    birthday: Date
     status: ActivityStatus
     name: string
   }
-
   export type Response = Activity
 }

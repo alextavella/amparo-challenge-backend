@@ -1,4 +1,3 @@
-import { PatientEntity } from '@/data/entities'
 import { LoadActivitiesService } from '@/data/usecases'
 import { ActivityStatus } from '@/domain/models'
 import { LoadActivities } from '@/domain/usecases'
@@ -6,51 +5,61 @@ import {
   FakeActivityMemoryRepository,
   FakePatientMemoryRepository,
 } from '@/tests/infra'
+import { addHours, subHours } from 'date-fns'
 
-let service: LoadActivities
-let repository: FakeActivityMemoryRepository
-let patientRepository: FakePatientMemoryRepository
+let loadActivities: LoadActivities
+let fakeActivityMemoryRepository: FakeActivityMemoryRepository
+let fakePatientMemoryRepository: FakePatientMemoryRepository
 
 describe('LoadActivitiesyService', () => {
   beforeEach(() => {
-    repository = new FakeActivityMemoryRepository()
-    patientRepository = new FakePatientMemoryRepository()
-    service = new LoadActivitiesService(repository, patientRepository)
-
-    jest.spyOn(patientRepository, 'load').mockImplementation((id: string) =>
-      Promise.resolve({
-        id,
-        name: 'patient-name',
-        cpf: '123-345-768-00',
-      } as PatientEntity),
+    fakeActivityMemoryRepository = new FakeActivityMemoryRepository()
+    fakePatientMemoryRepository = new FakePatientMemoryRepository()
+    loadActivities = new LoadActivitiesService(
+      fakeActivityMemoryRepository,
+      fakePatientMemoryRepository,
     )
+
+    jest
+      .spyOn(fakePatientMemoryRepository, 'load')
+      .mockImplementation((id: string) =>
+        Promise.resolve({
+          id,
+          name: 'patient-name',
+          cpf: '123-345-768-00',
+        }),
+      )
   })
 
   it('should be able list activities', async () => {
-    await repository.create({
+    const insertedDate = new Date(2020, 0, 10, 12)
+
+    await fakeActivityMemoryRepository.create({
       patient_id: 'patient-id',
-      data_vencimento: new Date(2020, 0, 10, 12).toISOString(),
+      birthday: insertedDate,
       name: 'Verificar com o paciente se o medicamento fez efeito',
       status: ActivityStatus.aberto,
     })
 
-    const activities = await service.load({
-      data: new Date(2020, 0, 10, 11).toISOString(),
+    const activities = await loadActivities.load({
+      data: subHours(insertedDate, 1),
     })
 
     expect(activities.length).toBe(1)
   })
 
   it('should not be able list activities with old validate date', async () => {
-    await repository.create({
+    const insertedDate = new Date(2020, 0, 10, 12)
+
+    await fakeActivityMemoryRepository.create({
       patient_id: 'patient-id',
-      data_vencimento: new Date(2020, 0, 10, 12).toISOString(),
+      birthday: insertedDate,
       name: 'Verificar com o paciente se o medicamento fez efeito',
       status: ActivityStatus.aberto,
     })
 
-    const activities = await service.load({
-      data: new Date(2020, 0, 10, 13).toISOString(),
+    const activities = await loadActivities.load({
+      data: addHours(insertedDate, 1),
     })
 
     expect(activities.length).toBe(0)

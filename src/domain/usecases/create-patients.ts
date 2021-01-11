@@ -9,6 +9,5 @@ export namespace CreatePatients {
     name: string
     cpf: string
   }
-
   export type Response = Patient
 }

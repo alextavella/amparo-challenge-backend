@@ -1,5 +1,4 @@
 import { CreateActivityRepository, LoadPatientByIdRepository } from '@/data/db'
-import { convertToActivityStatus } from '@/data/entities'
 import { PatientNotFound } from '@/domain/errors'
 import { CreateActivities } from '@/domain/usecases'
 
@@ -18,17 +17,7 @@ export class CreateActivityService implements CreateActivities {
       throw new PatientNotFound()
     }
 
-    const entity = await this.createActivityRepo.create(model)
-
-    const { id, data_vencimento, name, status } = entity
-
-    return {
-      id,
-      patient_id: patient.id,
-      data_vencimento: data_vencimento.toISOString(),
-      name,
-      status: convertToActivityStatus(status),
-    }
+    return this.createActivityRepo.create(model)
   }
 }
 

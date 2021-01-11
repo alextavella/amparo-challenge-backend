@@ -1,5 +1,5 @@
-import { ActivityEntity } from '@/data/entities'
+import { Activity } from '@/domain/models'
 
 export interface LoadActivityByIdRepository {
-  load(id: string): Promise<ActivityEntity | undefined>
+  load(id: string): Promise<Activity | undefined>
 }

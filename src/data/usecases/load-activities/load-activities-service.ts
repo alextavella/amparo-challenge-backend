@@ -1,9 +1,4 @@
 import { LoadActivitiesRepository, LoadPatientByIdRepository } from '@/data/db'
-import {
-  ActivityEntity,
-  convertToActivityStatus,
-  PatientEntity,
-} from '@/data/entities'
 import { LoadActivities } from '@/domain/usecases'
 
 export class LoadActivitiesService implements LoadActivities {
@@ -15,9 +10,7 @@ export class LoadActivitiesService implements LoadActivities {
   async load(
     model: LoadActivitiesService.Model,
   ): Promise<LoadActivitiesService.Response> {
-    const date = new Date(model.data)
-
-    const entities = await this.repository.loadByDate(date)
+    const entities = await this.repository.loadByDate(model.data)
 
     const patient_ids = entities
       .map((a) => a.patient_id)
@@ -30,15 +23,12 @@ export class LoadActivitiesService implements LoadActivities {
       patient_ids.map((id: string) => this.patientRepository.load(id)),
     )
 
-    return entities.map((a) => {
-      const patient = patients.find((p) => p?.id === a.patient_id)
+    return entities.map((activity) => {
+      const patient = patients.find((p) => p?.id === activity.patient_id)
 
       return {
-        id: a.id,
-        patient_name: patient?.name ?? '-',
-        data_vencimento: a.data_vencimento.toISOString(),
-        name: a.name,
-        status: convertToActivityStatus(a.status).toString(),
+        ...activity,
+        nome_paciente: patient?.name ?? '-',
       }
     })
   }

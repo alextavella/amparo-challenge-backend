@@ -4,10 +4,10 @@ import {
   LoadActivityByIdRepository,
   SaveActivityRepository,
 } from '@/data/db'
-import { ActivityEntity, convertToActivityEntityStatus } from '@/data/entities'
+import { Activity } from '@/domain/models'
 import { CreateActivities } from '@/domain/usecases'
-import { Collection, MemoryDb } from './db'
 import { isAfter } from 'date-fns'
+import { Collection, MemoryDb } from './db'
 
 export class ActivityMemoryRepository
   implements
@@ -18,44 +18,33 @@ export class ActivityMemoryRepository
   protected readonly collection: Collection
 
   constructor(collectionName = 'activities') {
-    this.collection = new MemoryDb<ActivityEntity>().collection(collectionName)
+    this.collection = new MemoryDb<Activity>().collection(collectionName)
   }
 
-  async create(model: CreateActivities.Model): Promise<ActivityEntity> {
-    const payload = Object.assign({}, model, {
-      data_vencimento: new Date(model.data_vencimento),
-      status: convertToActivityEntityStatus(model.status),
-    } as ActivityEntity)
+  async create(model: CreateActivities.Model): Promise<Activity> {
+    const entity = this.collection.add(model)
 
-    const entity = this.collection.add(payload)
-
-    return Promise.resolve(entity as ActivityEntity)
+    return Promise.resolve(entity as Activity)
   }
 
-  async load(id: string): Promise<ActivityEntity | undefined> {
-    const entity = this.collection.find((a: ActivityEntity) => a.id === id)
+  async load(id: string): Promise<Activity | undefined> {
+    const entity = this.collection.find((a: Activity) => a.id === id)
 
-    return Promise.resolve(entity as ActivityEntity)
+    return Promise.resolve(entity as Activity)
   }
 
-  async loadByDate(date: Date = new Date()): Promise<ActivityEntity[]> {
-    const entities = this.collection.filter((a: ActivityEntity) =>
-      isAfter(a.data_vencimento, date),
+  async loadByDate(date: Date = new Date()): Promise<Activity[]> {
+    const entities = this.collection.filter((a: Activity) =>
+      isAfter(a.birthday, date),
     )
 
-    return Promise.resolve(entities as ActivityEntity[])
+    return Promise.resolve(entities as Activity[])
   }
 
-  async save(entity: ActivityEntity): Promise<ActivityEntity> {
-    const index = this.collection.findIndex(
-      (a: ActivityEntity) => a.id === entity.id,
-    )
+  async save(entity: Activity): Promise<Activity> {
+    const index = this.collection.findIndex((a: Activity) => a.id === entity.id)
 
     if (index) {
-      const { name, status } = entity
-
-      Object.assign(entity, { name, status })
-
       this.collection.update(index, entity)
     }
 

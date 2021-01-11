@@ -6,8 +6,7 @@ export interface LoadActivities {
 
 export namespace LoadActivities {
   export type Model = {
-    data: string
+    data: Date
   }
-
   export type Response = ListActivity[]
 }
