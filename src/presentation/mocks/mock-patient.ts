@@ -1,5 +1,5 @@
 import { Patient } from '@/domain/models'
-import { CreatePatients } from '@/domain/usecases/create-patients'
+import { CreatePatients } from '@/domain/usecases'
 import { v4 as uuid } from 'uuid'
 
 export class CreatePatientsSpy implements CreatePatients {

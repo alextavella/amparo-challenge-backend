@@ -32,7 +32,7 @@ describe('CreateActivityService', () => {
 
     const activity = await createActivities.create({
       patient_id,
-      birthday: new Date(),
+      expire_date: new Date(),
       name: 'Verificar com o paciente se o medicamento fez efeito',
       status: ActivityStatus.aberto,
     })
@@ -44,7 +44,7 @@ describe('CreateActivityService', () => {
     await expect(
       createActivities.create({
         patient_id: 'patient-id',
-        birthday: new Date(),
+        expire_date: new Date(),
         name: 'Verificar com o paciente se o medicamento fez efeito',
         status: ActivityStatus.aberto,
       }),
