@@ -25,7 +25,7 @@ export class MemoryCollection<T = Object> implements Collection {
   constructor(private readonly name: string) {}
 
   public add(obj: T): T {
-    const added = Object.assign(obj, { id: uuid() })
+    const added = Object.assign({ id: uuid() }, obj)
     this.data.push(added)
     return added
   }
