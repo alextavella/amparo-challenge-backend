@@ -15,7 +15,7 @@ export class PatientMemoryRepository
   protected readonly collection: Collection
 
   constructor(collectionName = 'patients') {
-    this.collection = new MemoryDb<Patient>().collection(collectionName)
+    this.collection = MemoryDb.collection<Patient>(collectionName)
   }
 
   async create(model: CreatePatients.Model): Promise<Patient> {

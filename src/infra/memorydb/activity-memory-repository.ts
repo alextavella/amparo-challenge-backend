@@ -18,7 +18,7 @@ export class ActivityMemoryRepository
   protected readonly collection: Collection
 
   constructor(collectionName = 'activities') {
-    this.collection = new MemoryDb<Activity>().collection(collectionName)
+    this.collection = MemoryDb.collection<Activity>(collectionName)
   }
 
   async create(model: CreateActivities.Model): Promise<Activity> {

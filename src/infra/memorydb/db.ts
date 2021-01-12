@@ -8,14 +8,22 @@ export interface Collection<T = Object> {
   update(index: number, obj: T): T
 }
 
-export class MemoryDb<T = Object> {
-  protected db = {}
+interface Db {
+  [key: string]: any
+}
 
-  public collection(n: string): Collection {
-    const col = new MemoryCollection<T>(n)
-    const ref = { [n]: col }
-    this.db = Object.assign(this.db, ref)
-    return col
+export class MemoryDb {
+  protected static db: Db = {}
+
+  public static collection<T = Object>(n: string): Collection {
+    if (n in this.db) {
+      return this.db[n] as MemoryCollection<T>
+    } else {
+      const col = new MemoryCollection<T>(n)
+      const ref = { [n]: col }
+      this.db = Object.assign(this.db, ref)
+      return col
+    }
   }
 }
 
