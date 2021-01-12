@@ -21,14 +21,21 @@ describe('DateValidation', () => {
     expect(result).toBeUndefined()
   })
 
-  it('should return throw when invalid cpf', () => {
+  it('should return throw when invalid date', () => {
     jest.spyOn(mockDateValidator, 'isValid').mockReturnValue(false)
     expect(dateValidation.validate).toThrow()
   })
 
-  it('should return InvalidParamError when invalid cpf', () => {
+  it('should return InvalidParamError when invalid format date', () => {
     jest.spyOn(mockDateValidator, 'isValid').mockReturnValue(false)
     const date = '2021/01/01'
+    const error = dateValidation.validate({ [field]: date })
+    expect(error).toEqual(new InvalidParamError(field))
+  })
+
+  it('should return InvalidParamError when invalid date', () => {
+    jest.spyOn(mockDateValidator, 'isValid').mockReturnValue(false)
+    const date = 'asd asd'
     const error = dateValidation.validate({ [field]: date })
     expect(error).toEqual(new InvalidParamError(field))
   })

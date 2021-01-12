@@ -1,2 +1,3 @@
-export * from './mock-cpf-validators'
-export * from './mock-date-validators'
+export * from './mock-cpf-validator'
+export * from './mock-date-validator'
+export * from './mock-uuid-validator'
