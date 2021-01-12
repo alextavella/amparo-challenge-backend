@@ -4,20 +4,20 @@ import { CreateActivities } from '@/domain/usecases'
 
 export class CreateActivityService implements CreateActivities {
   constructor(
-    private readonly createActivityRepo: CreateActivityRepository,
-    private readonly loadPatientRepo: LoadPatientByIdRepository,
+    private readonly createActivityRepository: CreateActivityRepository,
+    private readonly loadPatientByIdRepository: LoadPatientByIdRepository,
   ) {}
 
   async create(
     model: CreateActivityService.Model,
   ): Promise<CreateActivityService.Response> {
-    const patient = await this.loadPatientRepo.load(model.patient_id)
+    const patient = await this.loadPatientByIdRepository.load(model.patient_id)
 
     if (!patient) {
       throw new PatientNotFound()
     }
 
-    return this.createActivityRepo.create(model)
+    return this.createActivityRepository.create(model)
   }
 }
 

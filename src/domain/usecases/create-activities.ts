@@ -7,7 +7,7 @@ export interface CreateActivities {
 export namespace CreateActivities {
   export type Model = {
     patient_id: string
-    birthday: Date
+    expire_date: Date
     status: ActivityStatus
     name: string
   }
