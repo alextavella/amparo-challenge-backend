@@ -1,4 +1,4 @@
-import { CreatePatients } from '@/domain/usecases/create-patients'
+import { CreatePatients } from '@/domain/usecases'
 import { HttpResponse, Validation } from '@/presentation/contracts'
 import { Controller } from '@/presentation/contracts/controller'
 import { badRequest, created, serverError } from '@/presentation/helpers'

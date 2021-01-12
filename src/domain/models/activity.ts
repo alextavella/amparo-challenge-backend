@@ -1,7 +1,7 @@
 export type Activity = {
   id: string
   patient_id: string
-  birthday: Date
+  expire_date: Date
   status: ActivityStatus
   name: string
 }
@@ -9,7 +9,7 @@ export type Activity = {
 export type ListActivity = {
   id: string
   nome_paciente: string
-  birthday: Date
+  expire_date: Date
   status: ActivityStatus
   name: string
 }

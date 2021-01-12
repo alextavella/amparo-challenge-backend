@@ -35,7 +35,7 @@ export class ActivityMemoryRepository
 
   async loadByDate(date: Date = new Date()): Promise<Activity[]> {
     const entities = this.collection.filter((a: Activity) =>
-      isAfter(a.birthday, date),
+      isAfter(a.expire_date, date),
     )
 
     return Promise.resolve(entities as Activity[])
