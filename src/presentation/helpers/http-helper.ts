@@ -1,7 +1,11 @@
-import { ValidationErrorsResult, ServerError } from '@/presentation/errors'
 import { HttpResponse } from '@/presentation/contracts'
+import {
+  AppError,
+  ServerError,
+  ValidationErrorsResult,
+} from '@/presentation/errors'
 
-type AnyError = Error | Error[] | ValidationErrorsResult
+type AnyError = Error | Error[] | ValidationErrorsResult | AppError
 
 export const badRequest = (error: AnyError): HttpResponse => ({
   statusCode: 400,
@@ -32,3 +36,13 @@ export const noContent = (): HttpResponse => ({
   statusCode: 204,
   data: null,
 })
+
+export const anyError = (error: AnyError): HttpResponse => {
+  if (error instanceof AppError) {
+    return {
+      statusCode: error.statusCode,
+      data: error,
+    }
+  }
+  return serverError(error as Error)
+}
