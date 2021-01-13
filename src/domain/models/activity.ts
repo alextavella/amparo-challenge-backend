@@ -6,9 +6,9 @@ export type Activity = {
   name: string
 }
 
-export type ListActivity = {
+export interface ListActivity {
   id: string
-  nome_paciente: string
+  patient_name: string
   expire_date: Date
   status: ActivityStatus
   name: string

@@ -1,19 +1,10 @@
 import { Collection, MemoryCollection, MemoryDb } from '@/infra/memorydb/db'
-import { v1 as uuid } from 'uuid'
 
 export class FakeMemoryDb extends MemoryDb {
   public collection<T = Object>(n: string): Collection {
-    const col = new FakeMemoryCollection<T>(n)
+    const col = new MemoryCollection<T>(n)
     const ref = { [n]: col }
-    this.db = Object.assign(this.db, ref)
+    FakeMemoryDb.db = Object.assign(FakeMemoryDb.db, ref)
     return col
-  }
-}
-
-class FakeMemoryCollection<T = Object> extends MemoryCollection<T> {
-  public add(obj: T): T {
-    const added = Object.assign(obj, { id: `test-${uuid()}` })
-    super.data.push(added)
-    return added
   }
 }

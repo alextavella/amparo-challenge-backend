@@ -1,5 +1,9 @@
-import { Activity } from '@/domain/models'
+import { Activity, PaginationResponse } from '@/domain/models'
 
 export interface LoadActivitiesRepository {
-  loadByDate(data: Date): Promise<Activity[]>
+  loadByDate(
+    page: number,
+    size: number,
+    date: Date,
+  ): Promise<PaginationResponse<Activity[]>>
 }

@@ -6,7 +6,7 @@ import {
 } from '@/data/db'
 import { Activity } from '@/domain/models'
 import { CreateActivities } from '@/domain/usecases'
-import { isAfter } from 'date-fns'
+import { PaginationResponse } from './../../domain/models/pagination'
 import { Collection, MemoryDb } from './db'
 
 export class ActivityMemoryRepository
@@ -15,7 +15,8 @@ export class ActivityMemoryRepository
     LoadActivitiesRepository,
     LoadActivityByIdRepository,
     SaveActivityRepository {
-  protected readonly collection: Collection
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly
+  protected collection: Collection
 
   constructor(collectionName = 'activities') {
     this.collection = MemoryDb.collection<Activity>(collectionName)
@@ -33,12 +34,27 @@ export class ActivityMemoryRepository
     return Promise.resolve(entity as Activity)
   }
 
-  async loadByDate(date: Date = new Date()): Promise<Activity[]> {
-    const entities = this.collection.filter((a: Activity) =>
-      isAfter(a.expire_date, date),
+  async loadByDate(
+    page: number,
+    size: number,
+    date: Date = new Date(),
+  ): Promise<PaginationResponse<Activity[]>> {
+    const filtered = this.collection.filter(
+      (a: Activity) => a.expire_date >= date,
     )
 
-    return Promise.resolve(entities as Activity[])
+    const init = size * (page - 1)
+    const total = Math.round(filtered.length / size)
+    const data = filtered.splice(Math.max(init, 0), size) as Activity[]
+
+    const result = {
+      page,
+      size,
+      total,
+      data,
+    }
+
+    return Promise.resolve(result)
   }
 
   async save(entity: Activity): Promise<Activity> {

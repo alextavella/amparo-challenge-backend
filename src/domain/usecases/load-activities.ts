@@ -1,12 +1,14 @@
-import { ListActivity } from '@/domain/models'
+import {
+  ListActivity,
+  PaginationModel,
+  PaginationResponse,
+} from '@/domain/models'
 
 export interface LoadActivities {
   load(model?: LoadActivities.Model): Promise<LoadActivities.Response>
 }
 
 export namespace LoadActivities {
-  export type Model = {
-    data: Date
-  }
-  export type Response = ListActivity[]
+  export type Model = PaginationModel & { date: Date }
+  export type Response = PaginationResponse<ListActivity[]>
 }

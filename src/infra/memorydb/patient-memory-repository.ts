@@ -12,7 +12,8 @@ export class PatientMemoryRepository
     CreatePatientRepository,
     SearchPatientsByNameRepository,
     LoadPatientByIdRepository {
-  protected readonly collection: Collection
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly
+  protected collection: Collection
 
   constructor(collectionName = 'patients') {
     this.collection = MemoryDb.collection<Patient>(collectionName)
