@@ -5,7 +5,11 @@ export class SearchPatientsByNameService implements SearchPatientsByName {
   constructor(private readonly repository: SearchPatientsByNameRepository) {}
 
   async search(name: string): Promise<SearchPatientsByNameService.Response> {
-    return this.repository.searchByName(name)
+    if (name) {
+      return this.repository.searchByName(name)
+    }
+
+    return []
   }
 }
 

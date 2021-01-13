@@ -16,9 +16,13 @@ describe('SearchPatientsByNameService', () => {
 
   it('should be able search patients by name', async () => {
     await fakePatientMemoryRepository.create({ name: 'Alex', cpf: '' })
-
     const patients = await searchPatientsByName.search('al')
-
     expect(patients.length).toBe(1)
+  })
+
+  it('should return empty list when empty term', async () => {
+    await fakePatientMemoryRepository.create({ name: 'Alex', cpf: '' })
+    const patients = await searchPatientsByName.search('')
+    expect(patients.length).toBe(0)
   })
 })
