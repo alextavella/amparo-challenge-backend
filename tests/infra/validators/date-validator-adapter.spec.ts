@@ -7,8 +7,14 @@ describe('DateValidatorAdapter', () => {
     dateValidatorAdapter = new DateValidatorAdapter()
   })
 
-  it('should be able validate a valid date', () => {
-    const date = '01/01/2021'
+  it('should be able validate a valid date to iso format', () => {
+    const date = new Date(2021, 0, 20).toISOString()
+    const result = dateValidatorAdapter.isValid(date)
+    expect(result).toBeTruthy()
+  })
+
+  it('should be able validate a valid date in iso format', () => {
+    const date = '2021-01-13T17:16:15.371Z'
     const result = dateValidatorAdapter.isValid(date)
     expect(result).toBeTruthy()
   })

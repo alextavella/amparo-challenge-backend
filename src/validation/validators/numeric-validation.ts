@@ -1,19 +1,19 @@
 import { Validation } from '@/presentation/contracts'
 import { InvalidParamError } from '@/presentation/errors'
-import { DateValidator } from '@/validation/protocols'
+import { NumericValidator } from '@/validation/protocols'
 import { BaseValidation } from './base-validation'
 
-export class DateValidation extends BaseValidation implements Validation {
+export class NumericValidation extends BaseValidation implements Validation {
   constructor(
     private readonly fieldName: string,
-    private readonly dateValidator: DateValidator,
+    private readonly numericValidator: NumericValidator,
   ) {
     super()
   }
 
   validate(input: any) {
     const value = input[this.fieldName]
-    const isValid = this.dateValidator.isValid(value)
+    const isValid = this.numericValidator.isValid(value)
     if (!isValid && !super.valid(value)) {
       return new InvalidParamError(this.fieldName)
     }

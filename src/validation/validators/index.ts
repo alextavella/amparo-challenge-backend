@@ -1,6 +1,7 @@
 export * from './activity-status-validation'
 export * from './cpf-validation'
 export * from './date-validation'
+export * from './numeric-validation'
 export * from './required-field-validation'
 export * from './uuid-validation'
 export * from './validation-composite'
