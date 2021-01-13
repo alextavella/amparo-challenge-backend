@@ -2,7 +2,7 @@ import { CreatePatients } from '@/domain/usecases'
 import { HttpResponse, Validation } from '@/presentation/contracts'
 import { Controller } from '@/presentation/contracts/controller'
 import { badRequest, created, serverError } from '@/presentation/helpers'
-import { CreatePatientsViewModel } from '@/presentation/view-models'
+import { PatientViewModel } from '@/presentation/view-models'
 
 export class CreatePatientController implements Controller {
   constructor(
@@ -21,7 +21,7 @@ export class CreatePatientController implements Controller {
 
       const patient = await this.createPatients.create(request)
 
-      return created(CreatePatientsViewModel.map(patient))
+      return created(PatientViewModel.map(patient))
     } catch (error) {
       return serverError(error)
     }

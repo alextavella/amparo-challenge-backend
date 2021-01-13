@@ -1,7 +1,7 @@
 import { Activity, ActivityStatus } from '@/domain/models'
 import { formatDate } from '@/presentation/utils/date'
 
-const formatActivityStatus = (status: ActivityStatus) => {
+export const formatActivityStatus = (status: ActivityStatus) => {
   const allStatus = {
     [ActivityStatus.aberto]: 'aberto',
     [ActivityStatus.atrasado]: 'atrasado',
@@ -10,14 +10,14 @@ const formatActivityStatus = (status: ActivityStatus) => {
   return allStatus[status]
 }
 
-export class CreateActivitiesViewModel {
+export class ActivityViewModel {
   id!: string
   data_vencimento!: string
   status!: number
   status_formatado!: string
   nome!: string
 
-  static map(entity: Activity): CreateActivitiesViewModel {
+  static map(entity: Activity): ActivityViewModel {
     const { id, expire_date, status, name } = entity
 
     return {
@@ -29,7 +29,7 @@ export class CreateActivitiesViewModel {
     }
   }
 
-  static mapCollection(entities: Activity[]): CreateActivitiesViewModel[] {
-    return entities.map(CreateActivitiesViewModel.map)
+  static mapCollection(entities: Activity[]): ActivityViewModel[] {
+    return entities.map(ActivityViewModel.map)
   }
 }

@@ -3,7 +3,7 @@ import { HttpResponse, Validation } from '@/presentation/contracts'
 import { Controller } from '@/presentation/contracts/controller'
 import { badRequest, ok, serverError } from '@/presentation/helpers'
 import { now, parseISODate, resetHour } from '@/presentation/utils'
-import { LoadActivitiesViewModel } from '@/presentation/view-models'
+import { ListActivitiesViewModel } from '@/presentation/view-models'
 
 export class LoadActivitiesController implements Controller {
   constructor(
@@ -13,7 +13,7 @@ export class LoadActivitiesController implements Controller {
 
   async handle(
     request: LoadActivitiesController.Request,
-  ): Promise<HttpResponse<LoadActivitiesViewModel[]>> {
+  ): Promise<HttpResponse<ListActivitiesViewModel[]>> {
     try {
       const error = this.validation.validate(request)
       if (error) {
@@ -37,7 +37,7 @@ export class LoadActivitiesController implements Controller {
         page,
         size,
         total,
-        data: LoadActivitiesViewModel.mapCollection(activities),
+        data: ListActivitiesViewModel.mapCollection(activities),
       }
 
       return ok(result)

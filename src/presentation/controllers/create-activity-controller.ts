@@ -4,7 +4,7 @@ import { HttpResponse, Validation } from '@/presentation/contracts'
 import { Controller } from '@/presentation/contracts/controller'
 import { anyError, badRequest, created } from '@/presentation/helpers'
 import { parseISODate } from '@/presentation/utils'
-import { CreateActivitiesViewModel } from '@/presentation/view-models'
+import { ActivityViewModel } from '@/presentation/view-models'
 
 export class CreateActivityController implements Controller {
   constructor(
@@ -34,7 +34,7 @@ export class CreateActivityController implements Controller {
         this.makePayload(request),
       )
 
-      return created(CreateActivitiesViewModel.map(activity))
+      return created(ActivityViewModel.map(activity))
     } catch (error) {
       return anyError(error)
     }
