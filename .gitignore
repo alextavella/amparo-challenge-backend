@@ -2,3 +2,4 @@ requirements
 node_modules
 dist
 yarn-*
+coverage
