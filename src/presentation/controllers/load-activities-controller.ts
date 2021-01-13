@@ -1,7 +1,7 @@
 import { LoadActivities } from '@/domain/usecases'
 import { HttpResponse, Validation } from '@/presentation/contracts'
 import { Controller } from '@/presentation/contracts/controller'
-import { badRequest, ok, serverError } from '@/presentation/helpers'
+import { badRequest, noContent, ok, serverError } from '@/presentation/helpers'
 import { now, parseISODate, resetHour } from '@/presentation/utils'
 import { ListActivitiesViewModel } from '@/presentation/view-models'
 
@@ -32,6 +32,8 @@ export class LoadActivitiesController implements Controller {
         total,
         data: activities,
       } = await this.loadActivities.load(payload)
+
+      if (activities.length === 0) return noContent()
 
       const result = {
         page,

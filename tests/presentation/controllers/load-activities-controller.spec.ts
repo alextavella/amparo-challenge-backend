@@ -1,7 +1,9 @@
+import { ActivityStatus } from '@/domain/models'
 import { LoadActivitiesController } from '@/presentation/controllers'
-import { badRequest } from '@/presentation/helpers'
+import { badRequest, noContent } from '@/presentation/helpers'
 import { LoadActivitiesSpy } from '@/presentation/mocks'
 import { parseISODate, resetHour } from '@/presentation/utils'
+import faker from 'faker'
 import { ValidationSpy } from '../mocks'
 
 let loadActivitiesController: LoadActivitiesController
@@ -35,10 +37,40 @@ describe('LoadActivitiesController', () => {
     })
   })
 
+  it('should be able call LoadActivitiesController and return a list when to found activities', async () => {
+    const request = mockRequest()
+    loadActivitiesSpy.response = {
+      page: request.page,
+      size: request.size,
+      total: 1,
+      data: [
+        {
+          id: faker.random.uuid(),
+          name: faker.random.word(),
+          patient_name: faker.random.word(),
+          expire_date: new Date(Date.now()),
+          status: ActivityStatus.aberto,
+        },
+      ],
+    }
+    await loadActivitiesController.handle(request)
+    expect(loadActivitiesSpy.params).toEqual({
+      page: request.page,
+      size: request.size,
+      date: resetHour(parseISODate(request.date)),
+    })
+  })
+
   it('should return 400 if LoadActivitiesController throws', async () => {
     jest.spyOn(validation, 'validate').mockReturnValue(new Error())
     const request = mockRequest()
     const error = await loadActivitiesController.handle(request)
     expect(error).toStrictEqual(badRequest(new Error()))
+  })
+
+  it('should return 204 if LoadActivitiesController is empty', async () => {
+    const request = mockRequest()
+    const error = await loadActivitiesController.handle(request)
+    expect(error).toStrictEqual(noContent())
   })
 })

@@ -1,7 +1,7 @@
 import { SearchPatientsByNameOrCpf } from '@/domain/usecases'
 import { HttpResponse, Validation } from '@/presentation/contracts'
 import { Controller } from '@/presentation/contracts/controller'
-import { anyError, badRequest, ok } from '@/presentation/helpers'
+import { anyError, badRequest, noContent, ok } from '@/presentation/helpers'
 import { SearchPatientsViewModel } from '@/presentation/view-models'
 
 export class SearchPatientsByNameOrCpfController implements Controller {
@@ -20,6 +20,8 @@ export class SearchPatientsByNameOrCpfController implements Controller {
       }
 
       const patients = await this.searchPatientsByNameOrCpf.search(request.term)
+
+      if (patients.length === 0) return noContent()
 
       return ok(SearchPatientsViewModel.mapCollection(patients))
     } catch (error) {

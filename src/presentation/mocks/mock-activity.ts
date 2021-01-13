@@ -1,4 +1,4 @@
-import { Activity, ListActivity, PaginationResponse } from '@/domain/models'
+import { Activity } from '@/domain/models'
 import {
   ChangeActivityStatus,
   CreateActivities,
@@ -21,20 +21,18 @@ export class CreateActivitySpy implements CreateActivities {
 
 export class LoadActivitiesSpy implements LoadActivities {
   params?: LoadActivities.Model
+  response: LoadActivities.Response = {
+    page: 1,
+    size: 1,
+    total: 0,
+    data: [] as any,
+  }
 
-  load(
-    model: LoadActivities.Model,
-  ): Promise<PaginationResponse<ListActivity[]>> {
+  load(model: LoadActivities.Model): Promise<LoadActivities.Response> {
     this.params = model
-
-    const response = {
-      page: +!model.page,
-      size: +!model.size,
-      total: 0,
-      data: [],
-    }
-
-    return Promise.resolve(response)
+    this.response.page = model.page ?? 1
+    this.response.size = model.size ?? 10
+    return Promise.resolve(this.response)
   }
 }
 

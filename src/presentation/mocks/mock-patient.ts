@@ -15,10 +15,10 @@ export class CreatePatientsSpy implements CreatePatients {
 
 export class SearchPatientsSpy implements SearchPatientsByNameOrCpf {
   params?: string
+  response: SearchPatientsByNameOrCpf.Response = []
 
   search(name: string): Promise<SearchPatientsByNameOrCpf.Response> {
     this.params = name
-    const response = [] as SearchPatientsByNameOrCpf.Response
-    return Promise.resolve(response)
+    return Promise.resolve(this.response)
   }
 }

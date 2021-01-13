@@ -14,8 +14,4 @@ export class PatientViewModel {
       cpf,
     }
   }
-
-  static mapCollection(entities: Patient[]): PatientViewModel[] {
-    return entities.map(PatientViewModel.map)
-  }
 }
