@@ -43,8 +43,11 @@ export class ActivityMemoryRepository
       (a: Activity) => a.expire_date >= date,
     )
 
+    const total = filtered.length
+      ? Math.max(Math.ceil(filtered.length / size), 1)
+      : 0
+
     const init = size * (page - 1)
-    const total = Math.round(filtered.length / size)
     const data = filtered.splice(Math.max(init, 0), size) as Activity[]
 
     const result = {
