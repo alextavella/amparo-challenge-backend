@@ -18,7 +18,7 @@ describe('ChangeActivityStatusService', () => {
   it('should be able change the activity status', async () => {
     const activity = await fakeActivityMemoryRepository.create({
       patient_id: 'patient_id',
-      birthday: new Date(),
+      expire_date: new Date(),
       name: 'Verificar com o paciente se o medicamento fez efeito',
       status: ActivityStatus.aberto,
     })

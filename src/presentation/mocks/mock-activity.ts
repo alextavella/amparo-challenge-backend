@@ -1,5 +1,10 @@
 import { Activity, ListActivity, PaginationResponse } from '@/domain/models'
-import { CreateActivities, LoadActivities } from '@/domain/usecases'
+import {
+  ChangeActivityStatus,
+  CreateActivities,
+  LoadActivities,
+} from '@/domain/usecases'
+import { ChangeActivityStatusViewModel } from '@/presentation/view-models'
 import { v4 as uuid } from 'uuid'
 
 export class CreateActivitySpy implements CreateActivities {
@@ -28,6 +33,23 @@ export class LoadActivitiesSpy implements LoadActivities {
       total: 0,
       data: [],
     }
+
+    return Promise.resolve(response)
+  }
+}
+
+export class ChangeActivityStatusSpy implements ChangeActivityStatus {
+  params?: ChangeActivityStatus.Model
+
+  change(
+    model: ChangeActivityStatus.Model,
+  ): Promise<ChangeActivityStatusViewModel.Model> {
+    this.params = model
+
+    const response = {
+      id: model.id,
+      status: model.status,
+    } as ChangeActivityStatusViewModel.Model
 
     return Promise.resolve(response)
   }

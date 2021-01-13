@@ -1,5 +1,6 @@
 import { adaptRoute, adaptRouteWithPagination } from '@/main/adapters'
 import {
+  makeChangeActivityStatusController,
   makeCreateActivityController,
   makeLoadActivitiesController,
 } from '@/main/factories/controllers'
@@ -11,4 +12,5 @@ export default (router: Router) => {
     '/:date?',
     adaptRouteWithPagination(makeLoadActivitiesController()),
   )
+  router.patch('/:id', adaptRoute(makeChangeActivityStatusController()))
 }
