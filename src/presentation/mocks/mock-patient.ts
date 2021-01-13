@@ -1,4 +1,4 @@
-import { CreatePatients, SearchPatientsByName } from '@/domain/usecases'
+import { CreatePatients, SearchPatientsByNameOrCpf } from '@/domain/usecases'
 import { v4 as uuid } from 'uuid'
 
 export class CreatePatientsSpy implements CreatePatients {
@@ -13,12 +13,12 @@ export class CreatePatientsSpy implements CreatePatients {
   }
 }
 
-export class SearchPatientsSpy implements SearchPatientsByName {
+export class SearchPatientsSpy implements SearchPatientsByNameOrCpf {
   params?: string
 
-  search(name: string): Promise<SearchPatientsByName.Response> {
+  search(name: string): Promise<SearchPatientsByNameOrCpf.Response> {
     this.params = name
-    const response = [] as SearchPatientsByName.Response
+    const response = [] as SearchPatientsByNameOrCpf.Response
     return Promise.resolve(response)
   }
 }

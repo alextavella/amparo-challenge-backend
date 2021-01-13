@@ -1,36 +1,36 @@
-import { SearchPatientsByNameController } from '@/presentation/controllers'
+import { SearchPatientsByNameOrCpfController } from '@/presentation/controllers'
 import { badRequest } from '@/presentation/helpers'
 import { SearchPatientsSpy } from '@/presentation/mocks'
 import { ValidationSpy } from '../mocks'
 
-let searchPatientsByNameController: SearchPatientsByNameController
+let searchPatientsByNameOrCpfController: SearchPatientsByNameOrCpfController
 let validation: ValidationSpy
 let searchPatientsSpy: SearchPatientsSpy
 
-const mockRequest = (): SearchPatientsByNameController.Request => ({
-  name: 'name',
+const mockRequest = (): SearchPatientsByNameOrCpfController.Request => ({
+  term: 'name',
 })
 
-describe('SearchPatientsByNameController', () => {
+describe('SearchPatientsByNameOrCpfController', () => {
   beforeEach(() => {
     validation = new ValidationSpy()
     searchPatientsSpy = new SearchPatientsSpy()
-    searchPatientsByNameController = new SearchPatientsByNameController(
+    searchPatientsByNameOrCpfController = new SearchPatientsByNameOrCpfController(
       validation,
       searchPatientsSpy,
     )
   })
 
-  it('should be able call SearchPatientsByNameController with correct values', async () => {
+  it('should be able call SearchPatientsByNameOrCpfController with correct values', async () => {
     const request = mockRequest()
-    await searchPatientsByNameController.handle(request)
-    expect(searchPatientsSpy.params).toEqual(request.name)
+    await searchPatientsByNameOrCpfController.handle(request)
+    expect(searchPatientsSpy.params).toEqual(request.term)
   })
 
-  it('should return 400 if SearchPatientsByNameController throws', async () => {
+  it('should return 400 if SearchPatientsByNameOrCpfController throws', async () => {
     jest.spyOn(validation, 'validate').mockReturnValue(new Error())
     const request = mockRequest()
-    const error = await searchPatientsByNameController.handle(request)
+    const error = await searchPatientsByNameOrCpfController.handle(request)
     expect(error).toStrictEqual(badRequest(new Error()))
   })
 })
