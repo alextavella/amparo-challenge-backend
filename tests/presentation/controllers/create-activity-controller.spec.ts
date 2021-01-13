@@ -7,9 +7,10 @@ let createActivityController: CreateActivityController
 let validation: ValidationSpy
 let createActivities: CreateActivitySpy
 
+const date = new Date(2021, 0, 1)
 const mockRequest = (): CreateActivityController.Request => ({
   patient_id: 'patient_id',
-  expire_date: '01/01/2021',
+  expire_date: date.toISOString(),
   status: 0,
   name: 'Verificar com o paciente se o medicamento fez efeito',
 })
@@ -29,7 +30,7 @@ describe('CreateActivityController', () => {
     await createActivityController.handle(request)
     expect(createActivities.params).toEqual({
       patient_id: request.patient_id,
-      expire_date: new Date(2021, 0, 1),
+      expire_date: date,
       status: request.status,
       name: request.name,
     })

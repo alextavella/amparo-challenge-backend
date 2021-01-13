@@ -3,7 +3,7 @@ import { CreateActivities } from '@/domain/usecases'
 import { HttpResponse, Validation } from '@/presentation/contracts'
 import { Controller } from '@/presentation/contracts/controller'
 import { anyError, badRequest, created } from '@/presentation/helpers'
-import { parseDate } from '@/presentation/utils'
+import { parseISODate } from '@/presentation/utils'
 import { CreateActivitiesViewModel } from '@/presentation/view-models'
 
 export class CreateActivityController implements Controller {
@@ -15,7 +15,7 @@ export class CreateActivityController implements Controller {
   private makePayload(request: any): CreateActivities.Model {
     return {
       patient_id: request.patient_id,
-      expire_date: parseDate(request.expire_date),
+      expire_date: parseISODate(request.expire_date),
       status: request.status as ActivityStatus,
       name: request.name,
     }
