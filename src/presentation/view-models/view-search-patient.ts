@@ -2,14 +2,14 @@ import { Patient } from '@/domain/models'
 
 export class SearchPatientsViewModel {
   id!: string
-  nome!: string
+  name!: string
 
   static map(entity: Patient): SearchPatientsViewModel {
     const { id, name } = entity
 
     return {
       id,
-      nome: name,
+      name,
     }
   }
 

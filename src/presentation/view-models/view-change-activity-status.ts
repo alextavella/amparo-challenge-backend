@@ -4,10 +4,11 @@ import { formatActivityStatus } from './view-activity'
 
 export class ChangeActivityStatusViewModel {
   id!: string
-  data_vencimento!: string
+  expire_date!: string
+  expire_date_formatted!: string
   status!: number
-  status_formatado!: string
-  nome!: string
+  status_formatted!: string
+  name!: string
 
   static map(
     entity: ChangeActivityStatusViewModel.Model,
@@ -16,10 +17,11 @@ export class ChangeActivityStatusViewModel {
 
     return {
       id,
-      data_vencimento: formatDate(expire_date),
+      expire_date: expire_date.toISOString(),
+      expire_date_formatted: formatDate(expire_date),
       status: status,
-      status_formatado: formatActivityStatus(status),
-      nome: name,
+      status_formatted: formatActivityStatus(status),
+      name,
     }
   }
 

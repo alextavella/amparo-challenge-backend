@@ -12,20 +12,22 @@ export const formatActivityStatus = (status: ActivityStatus) => {
 
 export class ActivityViewModel {
   id!: string
-  data_vencimento!: string
+  expire_date!: string
+  expire_date_formatted!: string
   status!: number
-  status_formatado!: string
-  nome!: string
+  status_formatted!: string
+  name!: string
 
   static map(entity: Activity): ActivityViewModel {
     const { id, expire_date, status, name } = entity
 
     return {
       id,
-      data_vencimento: formatDate(expire_date),
+      expire_date: expire_date.toISOString(),
+      expire_date_formatted: formatDate(expire_date),
       status: status,
-      status_formatado: formatActivityStatus(status),
-      nome: name,
+      status_formatted: formatActivityStatus(status),
+      name,
     }
   }
 

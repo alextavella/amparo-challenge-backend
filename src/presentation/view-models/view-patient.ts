@@ -2,7 +2,7 @@ import { Patient } from '@/domain/models'
 
 export class PatientViewModel {
   id!: string
-  nome!: string
+  name!: string
   cpf!: string
 
   static map(entity: Patient): PatientViewModel {
@@ -10,7 +10,7 @@ export class PatientViewModel {
 
     return {
       id,
-      nome: name,
+      name,
       cpf,
     }
   }

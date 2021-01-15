@@ -4,22 +4,26 @@ import { formatActivityStatus } from './view-activity'
 
 export class ListActivitiesViewModel {
   id!: string
-  nome_paciente!: string
-  data_vencimento!: string
+  patient_name!: string
+  patient_cpf!: string
+  expire_date!: string
+  expire_date_formatted!: string
   status!: number
-  status_formatado!: string
-  nome!: string
+  status_formatted!: string
+  name!: string
 
   static map(entity: ListActivity): ListActivitiesViewModel {
-    const { id, patient_name, expire_date, status, name } = entity
+    const { id, patient_name, patient_cpf, expire_date, status, name } = entity
 
     return {
       id,
-      nome_paciente: patient_name,
-      data_vencimento: formatDate(expire_date),
+      patient_name,
+      patient_cpf,
+      expire_date: expire_date.toISOString(),
+      expire_date_formatted: formatDate(expire_date),
       status: status,
-      status_formatado: formatActivityStatus(status),
-      nome: name,
+      status_formatted: formatActivityStatus(status),
+      name,
     }
   }
 
