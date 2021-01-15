@@ -39,6 +39,7 @@ export class LoadActivitiesService implements LoadActivities {
       const data: ListActivity = {
         ...activity,
         patient_name: patient?.name ?? '-',
+        patient_cpf: patient?.cpf ?? '-',
       }
 
       return data

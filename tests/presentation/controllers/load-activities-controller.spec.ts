@@ -48,6 +48,7 @@ describe('LoadActivitiesController', () => {
           id: faker.random.uuid(),
           name: faker.random.word(),
           patient_name: faker.random.word(),
+          patient_cpf: faker.random.number().toString(),
           expire_date: new Date(Date.now()),
           status: ActivityStatus.aberto,
         },

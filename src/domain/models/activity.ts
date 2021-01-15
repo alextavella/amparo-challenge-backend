@@ -9,6 +9,7 @@ export type Activity = {
 export interface ListActivity {
   id: string
   patient_name: string
+  patient_cpf: string
   expire_date: Date
   status: ActivityStatus
   name: string
