@@ -1,7 +1,7 @@
 import { LoadActivities } from '@/domain/usecases'
 import { HttpResponse, Validation } from '@/presentation/contracts'
 import { Controller } from '@/presentation/contracts/controller'
-import { badRequest, noContent, ok, serverError } from '@/presentation/helpers'
+import { anyError, badRequest, noContent, ok } from '@/presentation/helpers'
 import { now, parseISODate, resetHour } from '@/presentation/utils'
 import { ListActivitiesViewModel } from '@/presentation/view-models'
 
@@ -44,7 +44,7 @@ export class LoadActivitiesController implements Controller {
 
       return ok(result)
     } catch (error) {
-      return serverError(error)
+      return anyError(error)
     }
   }
 }

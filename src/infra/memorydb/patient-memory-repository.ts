@@ -1,5 +1,6 @@
 import {
   CreatePatientRepository,
+  LoadPatientByCpfRepository,
   LoadPatientByIdRepository,
   SearchPatientsByNameOrCpfRepository,
 } from '@/data/db'
@@ -10,8 +11,9 @@ import { Collection, MemoryDb } from './db'
 export class PatientMemoryRepository
   implements
     CreatePatientRepository,
-    SearchPatientsByNameOrCpfRepository,
-    LoadPatientByIdRepository {
+    LoadPatientByIdRepository,
+    LoadPatientByCpfRepository,
+    SearchPatientsByNameOrCpfRepository {
   // eslint-disable-next-line @typescript-eslint/prefer-readonly
   protected collection: Collection
 
@@ -38,6 +40,15 @@ export class PatientMemoryRepository
 
   async load(id: string): Promise<Patient | undefined> {
     const entity = await this.collection.find((p: Patient) => p.id === id)
+    return Promise.resolve(entity as Patient)
+  }
+
+  async loadByCpf(cpf: string): Promise<Patient | undefined> {
+    const formatWord = (word: string) =>
+      word.toLowerCase().replace(/[^\d]/g, '')
+    const entity = await this.collection.find(
+      (p: Patient) => formatWord(p.cpf) === formatWord(cpf),
+    )
     return Promise.resolve(entity as Patient)
   }
 }

@@ -1,7 +1,7 @@
 import { CreatePatients } from '@/domain/usecases'
 import { HttpResponse, Validation } from '@/presentation/contracts'
 import { Controller } from '@/presentation/contracts/controller'
-import { badRequest, created, serverError } from '@/presentation/helpers'
+import { anyError, badRequest, created } from '@/presentation/helpers'
 import { PatientViewModel } from '@/presentation/view-models'
 
 export class CreatePatientController implements Controller {
@@ -23,7 +23,7 @@ export class CreatePatientController implements Controller {
 
       return created(PatientViewModel.map(patient))
     } catch (error) {
-      return serverError(error)
+      return anyError(error)
     }
   }
 }
