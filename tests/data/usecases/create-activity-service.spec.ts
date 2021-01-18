@@ -1,4 +1,4 @@
-import { CreateActivityRepository, LoadPatientByIdRepository } from '@/data/db'
+import { CreateActivityRepository } from '@/data/db'
 import { CreateActivityService } from '@/data/usecases'
 import { PatientNotFound } from '@/domain/errors'
 import { ActivityStatus } from '@/domain/models'
@@ -18,7 +18,7 @@ describe('CreateActivityService', () => {
     fakePatientMemoryRepository = new FakePatientMemoryRepository()
     createActivities = new CreateActivityService(
       createActivityRepository,
-      fakePatientMemoryRepository as LoadPatientByIdRepository,
+      fakePatientMemoryRepository,
     )
   })
 

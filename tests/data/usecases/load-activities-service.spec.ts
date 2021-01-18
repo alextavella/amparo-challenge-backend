@@ -1,3 +1,4 @@
+import { LoadPatientRepository } from '@/data/db'
 import { LoadActivitiesService } from '@/data/usecases'
 import { ActivityStatus } from '@/domain/models'
 import { LoadActivities } from '@/domain/usecases'
@@ -5,11 +6,13 @@ import {
   FakeActivityMemoryRepository,
   FakePatientMemoryRepository,
 } from '@/tests/infra'
-import { addHours, subHours } from 'date-fns'
+import { addHours, subDays, subHours } from 'date-fns'
 
 let loadActivities: LoadActivities
 let fakeActivityMemoryRepository: FakeActivityMemoryRepository
 let fakePatientMemoryRepository: FakePatientMemoryRepository
+
+const patient_cpf = '123-345-768-00'
 
 describe('LoadActivitiesyService', () => {
   beforeEach(() => {
@@ -22,11 +25,11 @@ describe('LoadActivitiesyService', () => {
 
     jest
       .spyOn(fakePatientMemoryRepository, 'load')
-      .mockImplementation((id: string) =>
+      .mockImplementation((params: LoadPatientRepository.Params) =>
         Promise.resolve({
-          id,
+          id: params.id,
           name: 'patient-name',
-          cpf: '123-345-768-00',
+          cpf: patient_cpf,
         }),
       )
   })
@@ -51,7 +54,7 @@ describe('LoadActivitiesyService', () => {
     expect(activities[0].status).toEqual(activity.status)
   })
 
-  it('should not be able list activities with old validate date', async () => {
+  it('should not be able list activities on past', async () => {
     const insertedDate = new Date(2020, 0, 10, 12)
 
     await fakeActivityMemoryRepository.create({
@@ -62,7 +65,7 @@ describe('LoadActivitiesyService', () => {
     })
 
     const { data: activities } = await loadActivities.load({
-      date: addHours(insertedDate, 1),
+      date: subDays(insertedDate, 1),
     })
 
     expect(activities.length).toBe(0)
@@ -111,5 +114,87 @@ describe('LoadActivitiesyService', () => {
     expect(total_2).toBe(2)
     expect(activities_2.length).toBe(1)
     expect(activities_2[0].name).toEqual(third.name)
+  })
+
+  it('should be able list activities when there is status', async () => {
+    const insertedDate = new Date(2020, 0, 10, 12)
+
+    await fakeActivityMemoryRepository.create({
+      patient_id: 'patient-id',
+      expire_date: insertedDate,
+      name: 'Verificar com o paciente se o medicamento fez efeito',
+      status: ActivityStatus.aberto,
+    })
+
+    const { data: activities_status_aberto } = await loadActivities.load({
+      date: addHours(insertedDate, 1),
+      status: ActivityStatus.aberto,
+    })
+
+    expect(activities_status_aberto.length).toBe(1)
+  })
+
+  it('should not be able list activities when there is not status', async () => {
+    const insertedDate = new Date(2020, 0, 10, 12)
+
+    await fakeActivityMemoryRepository.create({
+      patient_id: 'patient-id',
+      expire_date: insertedDate,
+      name: 'Verificar com o paciente se o medicamento fez efeito',
+      status: ActivityStatus.aberto,
+    })
+
+    const { data: activities_status_finalizado } = await loadActivities.load({
+      date: addHours(insertedDate, 1),
+      status: ActivityStatus.finalizado,
+    })
+
+    const { data: activities_status_atrasado } = await loadActivities.load({
+      date: addHours(insertedDate, 1),
+      status: ActivityStatus.atrasado,
+    })
+
+    expect(activities_status_finalizado.length).toBe(0)
+    expect(activities_status_atrasado.length).toBe(0)
+  })
+
+  it('should be able list activities when there is cpf', async () => {
+    const insertedDate = new Date(2020, 0, 10, 12)
+
+    await fakeActivityMemoryRepository.create({
+      patient_id: 'patient-id',
+      expire_date: insertedDate,
+      name: 'Verificar com o paciente se o medicamento fez efeito',
+      status: ActivityStatus.aberto,
+    })
+
+    const { data: activities } = await loadActivities.load({
+      date: addHours(insertedDate, 1),
+      cpf: patient_cpf,
+    })
+
+    expect(activities.length).toBe(1)
+  })
+
+  it('should not be able list activities when there is not cpf', async () => {
+    jest
+      .spyOn(fakePatientMemoryRepository, 'load')
+      .mockImplementation(() => Promise.resolve(undefined))
+
+    const insertedDate = new Date(2020, 0, 10, 12)
+
+    await fakeActivityMemoryRepository.create({
+      patient_id: 'patient-id',
+      expire_date: insertedDate,
+      name: 'Verificar com o paciente se o medicamento fez efeito',
+      status: ActivityStatus.aberto,
+    })
+
+    const { data: activities } = await loadActivities.load({
+      date: addHours(insertedDate, 1),
+      cpf: '078.762.130-73',
+    })
+
+    expect(activities.length).toBe(0)
   })
 })

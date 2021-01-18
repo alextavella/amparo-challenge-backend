@@ -1,3 +1,4 @@
+import { ActivityStatus } from '@/domain/models'
 import { LoadActivities } from '@/domain/usecases'
 import { HttpResponse, Validation } from '@/presentation/contracts'
 import { Controller } from '@/presentation/contracts/controller'
@@ -20,10 +21,19 @@ export class LoadActivitiesController implements Controller {
         return badRequest(error)
       }
 
-      const payload = {
-        page: request.page,
-        size: request.size,
-        date: resetHour(request.date ? parseISODate(request.date) : now()),
+      const param_date = resetHour(
+        request.date ? parseISODate(request.date) : now(),
+      )
+      const param_status = request.status
+        ? (+request.status as ActivityStatus)
+        : undefined
+
+      const payload: LoadActivities.Model = {
+        page: +request.page,
+        size: +request.size,
+        date: param_date,
+        status: param_status,
+        cpf: request.cpf,
       }
 
       const {
@@ -54,5 +64,7 @@ export namespace LoadActivitiesController {
     page: number
     size: number
     date: string
+    status?: string
+    cpf?: string
   }
 }

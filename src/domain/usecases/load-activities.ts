@@ -1,4 +1,5 @@
 import {
+  ActivityStatus,
   ListActivity,
   PaginationModel,
   PaginationResponse,
@@ -9,6 +10,10 @@ export interface LoadActivities {
 }
 
 export namespace LoadActivities {
-  export type Model = PaginationModel & { date: Date }
+  export type Model = PaginationModel & {
+    date: Date
+    cpf?: string
+    status?: ActivityStatus
+  }
   export type Response = PaginationResponse<ListActivity[]>
 }

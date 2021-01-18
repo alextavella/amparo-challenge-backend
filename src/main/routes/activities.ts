@@ -10,7 +10,9 @@ export default (router: Router) => {
   router.post('/', adaptRoute(makeCreateActivityController()))
   router.get(
     '/:date?',
-    adaptRouteWithPagination(makeLoadActivitiesController()),
+    adaptRouteWithPagination(makeLoadActivitiesController(), {
+      query: ['status', 'cpf'],
+    }),
   )
   router.patch('/:id', adaptRoute(makeChangeActivityStatusController()))
 }

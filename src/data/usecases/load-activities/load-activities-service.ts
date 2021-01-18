@@ -1,28 +1,26 @@
-import { LoadActivitiesRepository, LoadPatientByIdRepository } from '@/data/db'
+import { LoadActivitiesRepository, LoadPatientRepository } from '@/data/db'
 import { ListActivity } from '@/domain/models'
 import { LoadActivities } from '@/domain/usecases'
 
 export class LoadActivitiesService implements LoadActivities {
   constructor(
     private readonly repository: LoadActivitiesRepository,
-    private readonly patientRepository: LoadPatientByIdRepository,
+    private readonly patientRepository: LoadPatientRepository,
   ) {}
 
   async load(
     model: LoadActivitiesService.Model,
   ): Promise<LoadActivitiesService.Response> {
-    const {
-      page,
-      size,
-      total,
-      data: entities,
-    } = await this.repository.loadByDate(
+    const { page, size, total, data: activities } = await this.repository.load(
       model.page ?? 1,
       model.size ?? 5,
-      model.date,
+      {
+        date: model.date,
+        status: model.status,
+      },
     )
 
-    const patient_ids = entities
+    const patient_ids = activities
       .map((a) => a.patient_id)
       .reduce<string[]>((acc, item) => {
         if (!acc.includes(item)) acc.push(item)
@@ -30,20 +28,28 @@ export class LoadActivitiesService implements LoadActivities {
       }, [])
 
     const patients = await Promise.all(
-      patient_ids.map((id: string) => this.patientRepository.load(id)),
+      patient_ids.map((id: string) =>
+        this.patientRepository.load({ id, cpf: model.cpf }),
+      ),
     )
 
-    const listActivities = entities.map((activity) => {
-      const patient = patients.find((p) => p?.id === activity.patient_id)
+    const found_patient_ids = patients.filter((p) => !!p).map((p) => p?.id)
 
-      const data: ListActivity = {
-        ...activity,
-        patient_name: patient?.name ?? '-',
-        patient_cpf: patient?.cpf ?? '-',
-      }
+    const listActivities = activities
+      .filter((activity) => {
+        return found_patient_ids.includes(activity.patient_id)
+      })
+      .map((activity) => {
+        const patient = patients.find((p) => p?.id === activity.patient_id)
 
-      return data
-    })
+        const data: ListActivity = {
+          ...activity,
+          patient_name: patient?.name ?? '-',
+          patient_cpf: patient?.cpf ?? '-',
+        }
+
+        return data
+      })
 
     return {
       page,

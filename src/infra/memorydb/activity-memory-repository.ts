@@ -4,9 +4,9 @@ import {
   LoadActivityByIdRepository,
   SaveActivityRepository,
 } from '@/data/db'
-import { Activity } from '@/domain/models'
+import { Activity, PaginationResponse } from '@/domain/models'
 import { CreateActivities } from '@/domain/usecases'
-import { PaginationResponse } from './../../domain/models/pagination'
+import { isSameDay } from 'date-fns'
 import { Collection, MemoryDb } from './db'
 
 export class ActivityMemoryRepository
@@ -28,27 +28,31 @@ export class ActivityMemoryRepository
     return Promise.resolve(entity as Activity)
   }
 
-  async load(id: string): Promise<Activity | undefined> {
+  async loadById(id: string): Promise<Activity | undefined> {
     const entity = this.collection.find((a: Activity) => a.id === id)
 
     return Promise.resolve(entity as Activity)
   }
 
-  async loadByDate(
+  async load(
     page: number,
     size: number,
-    date: Date = new Date(),
+    params: LoadActivitiesRepository.Params,
   ): Promise<PaginationResponse<Activity[]>> {
-    const filtered = this.collection.filter(
-      (a: Activity) => a.expire_date >= date,
-    )
+    let filtered = this.collection.filter((a: Activity) =>
+      isSameDay(a.expire_date, params.date),
+    ) as Activity[]
+
+    if (params.status && params.status >= 0) {
+      filtered = filtered.filter((a) => a.status === params.status)
+    }
 
     const total = filtered.length
       ? Math.max(Math.ceil(filtered.length / size), 1)
       : 0
 
     const init = size * (page - 1)
-    const data = filtered.splice(Math.max(init, 0), size) as Activity[]
+    const data = filtered.splice(Math.max(init, 0), size)
 
     const result = {
       page,

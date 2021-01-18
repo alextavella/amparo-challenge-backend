@@ -33,20 +33,25 @@ type PaginationOptions = {
 
 export const adaptRouteWithPagination = (
   controller: Controller,
-  options?: PaginationOptions,
+  options?: RouteOptions,
+  paginationOptions: PaginationOptions = { page: 1, size: 10 },
 ) => {
   return async (req: Request, res: Response) => {
-    const page = req.query?.page ?? options?.page ?? 1
-    const size = req.query?.size ?? options?.page ?? 10
-
-    const request = {
-      ...(req.body || {}),
-      ...(req.params || {}),
-      page: +page,
-      size: +size,
+    if (!req.query?.page) {
+      Object.assign(req.query, { page: paginationOptions.page })
     }
 
-    const response = await controller.handle(request)
-    return res.status(response.statusCode).json(response.data)
+    if (!req.query?.size) {
+      Object.assign(req.query, { size: paginationOptions.size })
+    }
+
+    const query = options?.query ?? []
+
+    const opts: RouteOptions = {
+      ...options,
+      query: [...query, 'page', 'size'],
+    }
+
+    return adaptRoute(controller, opts)(req, res)
   }
 }

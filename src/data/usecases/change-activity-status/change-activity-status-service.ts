@@ -12,7 +12,7 @@ export class ChangeActivityStatusService implements ChangeActivityStatus {
   async change(
     model: ChangeActivityStatusService.Model,
   ): Promise<ChangeActivityStatusService.Response> {
-    const activity = await this.repository.load(model.id)
+    const activity = await this.repository.loadById(model.id)
 
     if (!activity) {
       throw new ActivityNotFound()
